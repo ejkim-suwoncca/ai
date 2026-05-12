@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>교사를 위한 ChatGPT 실전 활용 연수</title>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #fafaf7;
+  --ink: #1a1a1a;
+  --ink-mid: #555;
+  --ink-light: #aaa;
+  --accent: #c8a96e;
+  --bar: #1a1a1a;
+  --border: #e4e0d8;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #1a1a1a;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── DECK fills all remaining space ── */
+.deck {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+}
+.deck.no-part-nav .part-nav {
+  display: none;
+}
+.deck.no-part-nav .content {
+  padding-top: 5%;
+}
+.part-nav {
+  position: absolute;
+  top: 14px;
+  left: 22px;
+  right: 22px;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  pointer-events: none;
+}
+.part-nav button {
+  pointer-events: auto;
+  border: 1px solid rgba(26,26,26,0.18);
+  border-top: 3px solid var(--accent);
+  border-radius: 6px;
+  background: rgba(250,250,247,0.92);
+  color: var(--ink);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.25;
+  padding: 8px 10px;
+  text-align: left;
+}
+.part-nav button span {
+  display: block;
+  color: var(--accent);
+  margin-bottom: 2px;
+}
+.part-nav button:hover,
+.part-nav button.active {
+  background: var(--ink);
+  color: #fafaf7;
+}
+.deck.dark-part-nav .part-nav button {
+  border-color: rgba(250,250,247,0.22);
+  border-top-color: var(--accent);
+  background: rgba(17,17,17,0.92);
+  color: #fafaf7;
+}
+.deck.dark-part-nav .part-nav button:hover,
+.deck.dark-part-nav .part-nav button.active {
+  background: var(--accent);
+  color: var(--ink);
+}
+.deck.dark-part-nav .part-nav button:hover span,
+.deck.dark-part-nav .part-nav button.active span {
+  color: var(--ink);
+}
+
+.slide {
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  display: none;
+  position: absolute;
+  inset: 0;
+}
+.slide.active { display: grid; grid-template-columns: 8px 1fr; }
+
+.bar { background: var(--bar); }
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 112px 6% 5%;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+/* ── SECTION SLIDES ── */
+.slide.section-slide .content { background: var(--ink); }
+.slide.section-slide .bar     { background: var(--accent); }
+.slide.section-slide h1.ko,
+.slide.section-slide h1.en    { color: #fafaf7; }
+.slide.section-slide .eyebrow { color: var(--accent); }
+.slide.section-slide .divider { background: var(--accent); }
+.slide.section-slide .slide-num { color: rgba(255,255,255,0.07); }
+.slide.section-slide .presenter { color: rgba(255,255,255,0.3); }
+
+/* ── TYPE ── */
+.eyebrow {
+  font-size: clamp(18px, 1.1vw, 18px);
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+h1.ko {
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: clamp(32px, 5.5vw, 64px);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.15;
+  margin-bottom: 12px;
+}
+h1.en {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(30px, 5.2vw, 62px);
+  font-weight: 900;
+  color: var(--ink);
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+h2.ko {
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: clamp(20px, 3vw, 38px);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+  margin-bottom: 8px;
+}
+.divider {
+  width: 36px; height: 1.5px;
+  background: var(--ink);
+  margin-bottom: 14px;
+  flex-shrink: 0;
+}
+.accent-divider {
+  width: 36px; height: 1.5px;
+  background: var(--accent);
+  margin-bottom: 14px;
+  flex-shrink: 0;
+}
+p.body-ko {
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: clamp(18px, 1.6vw, 18px);
+  color: var(--ink-mid);
+  line-height: 1.9;
+}
+p.body-en {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(18px, 1.4vw, 18px);
+  color: var(--ink-mid);
+  line-height: 1.8;
+  font-weight: 300;
+}
+
+/* ── BOTTOM ROW ── */
+.bottom-row {
+  position: absolute;
+  bottom: 4%;
+  left: 6%;
+  right: 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.presenter {
+  font-size: clamp(18px, 1vw, 18px);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  font-weight: 600;
+}
+.slide-num {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 900;
+  color: #ece8df;
+  line-height: 1;
+}
+
+/* ── DECO CIRCLE ── */
+.deco-circle {
+  position: absolute;
+  right: -5%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(130px, 20%, 240px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  pointer-events: none;
+}
+.deco-circle::before {
+  content: '';
+  position: absolute;
+  inset: 18%;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+}
+
+/* ── TABLE ── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 4px;
+}
+th {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: clamp(18px, 1vw, 18px);
+  color: var(--accent);
+  padding: 9px 12px;
+  text-align: left;
+  border-bottom: 1.5px solid var(--ink);
+}
+td {
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: clamp(18px, 1.4vw, 18px);
+  padding: 8px 12px;
+  color: var(--ink-mid);
+  border-bottom: 1px solid var(--border);
+  line-height: 1.5;
+  vertical-align: top;
+}
+td:first-child {
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  padding-right: 16px;
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: 0.5px;
+}
+tr:last-child td { border-bottom: none; }
+
+/* ── TWO COL ── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4%;
+}
+.col-label {
+  font-size: clamp(18px, 1vw, 18px);
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.col-label.bad  { color: #c0392b; }
+.col-label.good { color: #27ae60; }
+
+.prompt-box {
+  background: #f0ede6;
+  border-radius: 6px;
+  padding: 14px 16px;
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: clamp(18px, 1.4vw, 18px);
+  color: var(--ink);
+  line-height: 2;
+}
+.prompt-box.bad  { border-left: 3px solid #e74c3c; }
+.prompt-box.good { border-left: 3px solid #27ae60; }
+.prompt-box .key {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(18px, 0.9vw, 18px);
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 1px;
+}
+
+/* ── PROBABILITY ── */
+.prob-flow { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+.prob-row  { display: flex; align-items: center; gap: 12px; }
+.prob-token {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(18px, 1.6vw, 18px);
+  font-weight: 700;
+  color: var(--ink);
+  background: #ece8df;
+  padding: 6px 14px;
+  border-radius: 4px;
+  min-width: 72px;
+  text-align: center;
+}
+.prob-bar-wrap { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+.prob-bar-item { display: flex; align-items: center; gap: 10px; font-size: clamp(18px, 1.1vw, 18px); }
+.prob-bar      { height: 8px; border-radius: 4px; background: var(--accent); opacity: 0.7; }
+.prob-bar.alt  { background: var(--ink-light); }
+.prob-val      { font-family: 'DM Sans', sans-serif; font-weight: 600; color: var(--ink-mid); font-size: clamp(18px, 1vw, 18px); white-space: nowrap; }
+
+/* ── TOC ── */
+.toc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 7%;
+  margin-top: 4px;
+}
+.toc-part-title {
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: clamp(18px, 1.6vw, 18px);
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.toc-part-num {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(18px, 1.2vw, 18px);
+  color: var(--accent);
+  margin-right: 6px;
+}
+.toc-items { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.toc-items li {
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: clamp(18px, 1.3vw, 18px);
+  color: var(--ink-mid);
+  padding-left: 14px;
+  position: relative;
+  line-height: 1.6;
+}
+.toc-items li::before { content: '·'; position: absolute; left: 0; color: var(--accent); }
+
+/* ── BULLET LIST ── */
+.bullet-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+.bullet-list li {
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: clamp(18px, 1.5vw, 18px);
+  color: var(--ink-mid);
+  padding-left: 18px;
+  position: relative;
+  line-height: 1.75;
+}
+.bullet-list li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 12px;
+  width: 6px; height: 1.5px;
+  background: var(--accent);
+}
+.bullet-list li strong { color: var(--ink); font-weight: 700; }
+
+/* ── HIGHLIGHT ── */
+.highlight {
+  background: #f0ede6;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 6px 6px 0;
+  padding: 12px 16px;
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: clamp(18px, 1.3vw, 18px);
+  color: var(--ink);
+  line-height: 1.85;
+  margin-top: 10px;
+}
+
+/* ── COMPARE CARDS ── */
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4%; margin-top: 4px; }
+.compare-card { background: #f5f2ec; border-radius: 8px; padding: 16px; }
+.compare-card-title {
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: clamp(18px, 1.6vw, 18px);
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1.5px solid var(--border);
+}
+.compare-card ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.compare-card ul li {
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: clamp(18px, 1.3vw, 18px);
+  color: var(--ink-mid);
+  padding-left: 14px;
+  position: relative;
+  line-height: 1.65;
+}
+.compare-card ul li::before { content: '·'; position: absolute; left: 0; color: var(--accent); }
+
+/* ── DRIVE BOX ── */
+.drive-box { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; margin-top: 10px; }
+.drive-icon-row { display: flex; align-items: center; gap: 14px; }
+.drive-icon {
+  width: clamp(36px, 4vw, 50px);
+  height: clamp(36px, 4vw, 50px);
+  background: #f0ede6;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(18px, 2.2vw, 24px);
+  flex-shrink: 0;
+}
+.drive-link-text {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(18px, 1.1vw, 18px);
+  color: var(--accent);
+  font-weight: 600;
+  word-break: break-all;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.live-demo-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--ink); color: #fafaf7;
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(18px, 1vw, 18px);
+  font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  padding: 7px 16px; border-radius: 100px;
+}
+.live-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: #e74c3c;
+  animation: blink 1.2s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+/* ── ETHICS ── */
+.ethics-list { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+.ethics-item { display: flex; align-items: flex-start; gap: 14px; }
+.ethics-icon {
+  width: clamp(32px, 3.5vw, 44px);
+  height: clamp(32px, 3.5vw, 44px);
+  background: #f0ede6; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(18px, 1.8vw, 20px);
+  flex-shrink: 0;
+}
+.ethics-text {
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: clamp(18px, 1.3vw, 18px);
+  color: var(--ink-mid);
+  line-height: 1.8;
+}
+.ethics-text strong {
+  color: var(--ink); display: block; font-weight: 700;
+  font-size: clamp(18px, 1.4vw, 18px);
+}
+
+/* ── SUMMARY ── */
+.summary-index {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin: 0 0 18px;
+}
+.summary-index-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.summary-index-item {
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  background: #f5f2ec;
+  line-height: 1.35;
+}
+.summary-index-item span {
+  display: block;
+  color: var(--accent);
+  margin-bottom: 2px;
+}
+.summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 6%; margin-top: 4px; }
+.summary-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(18px, 1vw, 18px);
+  font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--accent);
+  margin-bottom: 3px;
+}
+  .summary-text {
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: clamp(18px, 1.4vw, 18px);
+  color: var(--ink-mid); line-height: 1.7;
+}
+.summary-note {
+  grid-column: 1 / -1;
+}
+
+/* ── NAV BAR ── */
+.nav {
+  height: 44px;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-shrink: 0;
+  padding: 0 20px;
+}
+.nav button {
+  background: #333; border: none; color: #ccc;
+  width: 30px; height: 30px; border-radius: 50%;
+  cursor: pointer; font-size:18px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.nav button:hover:not(:disabled) { background: #555; }
+.nav button:disabled { color: #444; cursor: default; }
+.counter {
+  font-family: 'DM Sans', sans-serif;
+  font-size:18px; color: #666; letter-spacing: 2px; min-width: 52px; text-align: center;
+}
+.progress { width: 140px; height: 2px; background: #333; border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--accent, #c8a96e); border-radius: 2px; transition: width 0.3s ease; }
+</style>
+</head>
+<body>
+
+<div class="deck no-part-nav">
+  <div class="part-nav" aria-label="Part navigation">
+    <button type="button" data-target="3"><span>Part 1</span>AI &amp; LLM 이해</button>
+    <button type="button" data-target="8"><span>Part 2</span>프롬프트 작성법</button>
+    <button type="button" data-target="14"><span>Part 3</span>GPT 실전 활용</button>
+    <button type="button" data-target="18"><span>Part 4</span>주의사항</button>
+    <button type="button" data-target="20"><span>Bonus</span>AI 생태계</button>
+  </div>
+
+  <!-- 01 TITLE -->
+  <div class="slide active" id="s1">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">교사 연수 · 2026</div>
+      <h1 class="ko" style="font-size:clamp(24px, 4vw, 50px); margin-bottom:4px;">교사를 위한</h1>
+      <h1 class="en" style="margin-bottom:4px;">ChatGPT</h1>
+      <h1 class="ko" style="font-size:clamp(20px, 3.2vw, 40px); color:var(--ink-mid); font-weight:700;">실전 활용 연수</h1>
+      <div class="divider" style="margin-top:18px;"></div>
+      <p class="body-ko">강사 &nbsp;·&nbsp; EJ</p>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers</span><span class="slide-num">01</span></div>
+      <div class="deco-circle"></div>
+    </div>
+  </div>
+
+  <!-- 02 목차 -->
+  <div class="slide" id="s2">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Contents</div>
+      <h2 class="ko" style="margin-bottom:6px;">목차</h2>
+      <div class="accent-divider"></div>
+      <div class="toc-grid">
+        <div>
+          <div class="toc-part-title"><span class="toc-part-num">1부</span> AI & LLM 이해</div>
+          <ul class="toc-items"><li>LLM이란 무엇인가?</li><li>GPT는 어떻게 작동하는가?</li><li>결과를 바꾸는 변수들</li></ul>
+        </div>
+        <div>
+          <div class="toc-part-title"><span class="toc-part-num">2부</span> 프롬프트 작성법</div>
+          <ul class="toc-items"><li>프롬프트란?</li><li>학생 비유로 이해하기</li><li>프롬프트 프레임워크</li><li>AI로 프롬프트 쓰기</li></ul>
+        </div>
+        <div>
+          <div class="toc-part-title"><span class="toc-part-num">3부</span> GPT 실전 활용</div>
+          <ul class="toc-items"><li>Project vs GPT</li><li>GPT 교과 만들기</li><li>생기부 GPT 만들기</li></ul>
+        </div>
+        <div>
+          <div class="toc-part-title"><span class="toc-part-num">4부</span> 주의사항</div>
+          <ul class="toc-items"><li>Hallucination</li><li>개인정보 & 윤리</li></ul>
+        </div>
+      </div>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">02</span></div>
+    </div>
+  </div>
+
+  <!-- 03 SECTION: 1부 -->
+  <div class="slide section-slide" id="s3">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Part 1</div>
+      <div class="divider"></div>
+      <h1 class="ko">AI & LLM 이해</h1>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">03</span></div>
+    </div>
+  </div>
+
+  <!-- 04 LLM이란? -->
+  <div class="slide" id="s4">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Part 1 · LLM 이해</div>
+      <h2 class="ko">LLM이란 무엇인가?</h2>
+      <div class="accent-divider"></div>
+      <ul class="bullet-list">
+        <li><strong>생각하는 기계가 아니다</strong> — LLM은 사람처럼 "생각"하는 것이 아니다</li>
+        <li><strong>확률 기반 예측</strong> — 지금까지의 문맥을 바탕으로 다음에 올 가능성이 높은 단어를 예측한다</li>
+        <li><strong>핵심 원리</strong> — 계산이 아니라 확률, 이해가 아니라 패턴 인식</li>
+      </ul>
+      <div class="highlight">💡 GPT에게 "1+1?"을 물으면, 답을 "계산"하는 것이 아니라 학습 데이터에서 가장 그럴듯한 다음 단어를 "예측"한다.</div>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">04</span></div>
+    </div>
+  </div>
+
+  <!-- 05 확률 예시 ① -->
+  <div class="slide" id="s5">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Part 1 · 확률 예시 ①</div>
+      <h2 class="ko">Prompt: "1+1?" — 일반 수학 경로</h2>
+      <div class="accent-divider"></div>
+      <p class="body-ko" style="margin-bottom:14px;">GPT는 여러 후보 경로를 동시에 계산하고, 가장 그럴듯한 답을 선택한다.</p>
+      <div class="prob-flow">
+        <div class="prob-row">
+          <div class="prob-token">1+1=</div>
+          <div class="prob-bar-wrap">
+            <div class="prob-bar-item">
+              <span class="prob-val" style="min-width:20px;">"2"</span>
+              <div class="prob-bar" style="width:80%;"></div>
+              <span class="prob-val">99%</span>
+            </div>
+            <div class="prob-bar-item">
+              <span class="prob-val" style="min-width:20px;">"3"</span>
+              <div class="prob-bar alt" style="width:4%;"></div>
+              <span class="prob-val">1%</span>
+            </div>
+          </div>
+        </div>
+        <div class="prob-row">
+          <div class="prob-token">→ 2</div>
+          <div class="prob-bar-wrap">
+            <p class="body-ko" style="font-size:clamp(18px, 1.3vw, 18px);">가장 그럴듯한 경로 선택 → 결과: <strong>1+1=2</strong></p>
+          </div>
+        </div>
+      </div>
+      <div class="highlight">📌 문맥이 없으면 GPT는 가장 일반적인 답을 선택한다.</div>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">05</span></div>
+    </div>
+  </div>
+
+  <!-- 06 확률 예시 ② -->
+  <div class="slide" id="s6">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Part 1 · 확률 예시 ②</div>
+      <h2 class="ko">같은 질문, 다른 문맥</h2>
+      <div class="accent-divider"></div>
+      <p class="body-ko" style="margin-bottom:14px;">문맥이 달라지면 GPT는 완전히 다른 답을 선택한다.</p>
+      <div class="compare-grid">
+        <div class="compare-card">
+          <div class="compare-card-title">이진법 문맥</div>
+          <ul><li>"이진법으로 1+1?" 이라고 물으면</li><li style="margin-top:6px; font-weight:700; color:var(--ink);">→ 1+1 = 10₂</li></ul>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title">물리적 비유 문맥</div>
+          <ul><li>물방울 1개 + 물방울 1개를 생각하면</li><li style="margin-top:6px; font-weight:700; color:var(--ink);">→ 1+1 = 1</li></ul>
+        </div>
+      </div>
+      <div class="highlight">💡 단어 하나, 맥락 하나가 결과를 완전히 바꾼다.</div>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">06</span></div>
+    </div>
+  </div>
+
+  <!-- 07 결과를 바꾸는 변수 -->
+  <div class="slide" id="s7">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Part 1 · 핵심 원리</div>
+      <h2 class="ko">결과를 바꾸는 세 가지 변수</h2>
+      <div class="accent-divider"></div>
+      <table>
+        <thead><tr><th>변수</th><th>의미</th><th>효과</th></tr></thead>
+        <tbody>
+          <tr><td>학습 데이터</td><td>GPT가 어떻게 훈련됐는가</td><td>기본 답변의 방향을 결정</td></tr>
+          <tr><td>문맥 (Context)</td><td>프롬프트가 얼마나 구체적인가</td><td>구체적일수록 결과 품질 향상</td></tr>
+          <tr><td>단어 선택</td><td>어떤 표현을 사용하는가</td><td>단어 하나가 결과를 크게 바꿈</td></tr>
+        </tbody>
+      </table>
+      <div class="highlight">📌 정보가 많을수록, 문맥이 구체적일수록, 단어가 정확할수록 결과가 좋아진다.</div>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">07</span></div>
+    </div>
+  </div>
+
+  <!-- 08 SECTION: 2부 -->
+  <div class="slide section-slide" id="s8">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Part 2</div>
+      <div class="divider"></div>
+      <h1 class="ko">프롬프트 작성법</h1>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">08</span></div>
+    </div>
+  </div>
+
+  <!-- 09 프롬프트란? -->
+  <div class="slide" id="s9">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Part 2 · 프롬프트</div>
+      <h2 class="ko">프롬프트란?</h2>
+      <div class="accent-divider"></div>
+      <div class="two-col" style="margin-top:4px;">
+        <div>
+          <div class="col-label bad">❌ 약한 프롬프트</div>
+          <div class="prompt-box bad">"시험 문제 만들어줘"<div style="margin-top:10px; font-size:clamp(18px, 1.1vw, 18px); color:var(--ink-light);">→ 정보 부족 → 애매한 결과</div></div>
+        </div>
+        <div>
+          <div class="col-label good">✅ 강한 프롬프트</div>
+          <div class="prompt-box good">"중2 영어 현재완료 단원,<br>중하위권 수준,<br>객관식 5문제,<br>서술형 2문제"<div style="margin-top:10px; font-size:clamp(18px, 1.1vw, 18px); color:var(--ink-light);">→ 문맥 증가 → 훨씬 정확한 결과</div></div>
+        </div>
+      </div>
+      <div class="highlight">💡 GPT는 지시를 "이해"하는 게 아니라 문맥으로 "예측"한다.</div>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">09</span></div>
+    </div>
+  </div>
+
+  <!-- 10 학생 비유 -->
+  <div class="slide" id="s10">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Part 2 · 학생 비유</div>
+      <h2 class="ko">학생과 LLM은 같다</h2>
+      <div class="accent-divider"></div>
+      <div class="compare-grid">
+        <div class="compare-card">
+          <div class="compare-card-title">학생도…</div>
+          <ul>
+            <li>수업 내용을 많이 알수록</li>
+            <li>예시를 많이 볼수록</li>
+            <li>문제 유형을 명확히 알수록</li>
+            <li style="margin-top:8px; font-weight:700; color:var(--ink);">→ 시험을 잘 본다</li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title">LLM도…</div>
+          <ul>
+            <li>더 많은 정보를 줄수록</li>
+            <li>더 명확한 상황을 줄수록</li>
+            <li>더 구체적인 제한을 줄수록</li>
+            <li style="margin-top:8px; font-weight:700; color:var(--ink);">→ 결과가 좋아진다</li>
+          </ul>
+        </div>
+      </div>
+      <div class="highlight">📌 IB 예시 · "Memory 설명해줘" vs "CPU·GPU와의 관계까지 데이터로 설명해줘" → 결과의 질이 완전히 다르다</div>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">10</span></div>
+    </div>
+  </div>
+
+  <!-- 11 프레임워크 ① -->
+  <div class="slide" id="s11">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Part 2 · 프레임워크 ①</div>
+      <h2 class="ko">프롬프트 프레임워크</h2>
+      <div class="accent-divider"></div>
+      <table>
+        <thead><tr><th>요소</th><th>질문</th><th>예시</th></tr></thead>
+        <tbody>
+          <tr><td>Role</td><td>GPT는 누구처럼 행동해야 하는가?</td><td>중학교 영어 교사</td></tr>
+          <tr><td>Task</td><td>무엇을 해야 하는가?</td><td>현재완료 활동지 제작</td></tr>
+          <tr><td>Format</td><td>어떤 형식으로 답해야 하는가?</td><td>객관식 5문제 + 쓰기 활동</td></tr>
+          <tr><td>Constraints</td><td>어떤 제한이 있는가?</td><td>중하위권, 15분 이내</td></tr>
+        </tbody>
+      </table>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">11</span></div>
+    </div>
+  </div>
+
+  <!-- 12 프레임워크 ② -->
+  <div class="slide" id="s12">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Part 2 · 프레임워크 ②</div>
+      <h2 class="ko">실전 예시 비교</h2>
+      <div class="accent-divider"></div>
+      <div class="two-col">
+        <div>
+          <div class="col-label bad">❌ 약한 프롬프트</div>
+          <div class="prompt-box bad">"영어 활동지 만들어줘"</div>
+        </div>
+        <div>
+          <div class="col-label good">✅ 강한 프롬프트</div>
+          <div class="prompt-box good">
+            <span class="key">Role</span> 너는 중학교 영어 교사야.<br>
+            <span class="key" style="margin-top:6px;">Task</span> 중2 현재완료 수업용 활동지를 만들어줘.<br>
+            <span class="key" style="margin-top:6px;">Format</span> 객관식 5문제 + 짧은 쓰기 활동 포함.<br>
+            <span class="key" style="margin-top:6px;">Constraints</span> 학생 수준은 중하위권, 15분 안에 끝낼 수 있게.
+          </div>
+        </div>
+      </div>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">12</span></div>
+    </div>
+  </div>
+
+  <!-- 13 AI로 프롬프트 쓰기 -->
+  <div class="slide" id="s13">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Part 2 · AI 활용</div>
+      <h2 class="ko">AI로 프롬프트 쓰기</h2>
+      <div class="accent-divider"></div>
+      <div class="prompt-box good" style="margin-bottom:12px;">
+        <span class="key">Role</span> 너는 프롬프트 엔지니어 전문가야.<br>
+        <span class="key" style="margin-top:5px;">Task</span> 중학교 ___ 교사를 돕는 프롬프트를 작성해줘.<br>
+        <span class="key" style="margin-top:5px;">Format</span> Role / Task / Format / Constraints 구조로.<br>
+        <span class="key" style="margin-top:5px;">Constraints</span> 500자 이내.
+      </div>
+      <div class="highlight">💡 <strong>왜 직접 먼저 배웠나?</strong> — 뭐가 맞는지, 뭐가 필요한지 판단하는 건 사람의 몫이다. AI가 만들어준 프롬프트도 반드시 사람이 검토하고 수정해야 한다.</div>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">13</span></div>
+    </div>
+  </div>
+
+  <!-- 14 SECTION: 3부 -->
+  <div class="slide section-slide" id="s14">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Part 3</div>
+      <div class="divider"></div>
+      <h1 class="ko">GPT 실전 활용</h1>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">14</span></div>
+    </div>
+  </div>
+
+  <!-- 15 Project vs GPT -->
+  <div class="slide" id="s15">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Part 3 · 도구 이해</div>
+      <h2 class="ko">Project vs GPT</h2>
+      <div class="accent-divider"></div>
+      <table>
+        <thead><tr><th></th><th>Projects</th><th>GPTs</th></tr></thead>
+        <tbody>
+          <tr><td>특징</td><td>장기 문맥 저장 공간</td><td>특정 역할에 특화된 AI</td></tr>
+          <tr><td>용도</td><td>여러 채팅 관리</td><td>반복 업무 자동화</td></tr>
+          <tr><td>중심</td><td>자료 중심</td><td>역할 중심</td></tr>
+          <tr><td>예시</td><td>내 글 모음, 어투 학습</td><td>학습지 GPT, 생기부 GPT</td></tr>
+        </tbody>
+      </table>
+      <div class="highlight">💡 Projects: 여러 대화가 하나의 문맥이 됨 · GPTs: 역할을 미리 세팅해두는 나만의 AI 비서</div>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">15</span></div>
+    </div>
+  </div>
+
+  <!-- 16 GPT 교과 만들기 -->
+  <div class="slide" id="s16">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Part 3 · 실전</div>
+      <h2 class="ko">GPT 교과 만들기</h2>
+      <div class="accent-divider"></div>
+      <ul class="bullet-list" style="margin-bottom:16px;">
+        <li><strong>역할별로 GPT를 나눠라</strong> — 학습지 GPT / 브레인스토밍 GPT / 시험 문제 GPT / 수업 계획안 GPT</li>
+        <li><strong>문맥이 많을수록 좋아진다</strong> — 역할, 예시, 제약 조건을 최대한 구체적으로 제공</li>
+      </ul>
+      <div class="drive-box">
+        <div class="drive-icon-row">
+          <div class="drive-icon">📁</div>
+          <div>
+            <div style="font-family:'DM Sans',sans-serif; font-size:clamp(18px, 1.1vw, 18px); color:var(--ink-mid); margin-bottom:4px; font-weight:600;">실습 자료</div>
+            <div class="drive-link-text">drive.google.com/drive/folders/11mPAkkV2l0lRrUTN4S3s2dq47_zaW8Jo</div>
+          </div>
+        </div>
+        <div class="live-demo-badge"><span class="live-dot"></span>강사 직접 시연</div>
+      </div>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">16</span></div>
+    </div>
+  </div>
+
+  <!-- 17 생기부 GPT -->
+  <div class="slide" id="s17">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Part 3 · 실전</div>
+      <h2 class="ko">생기부 GPT 만들기</h2>
+      <div class="accent-divider"></div>
+      <ul class="bullet-list" style="margin-bottom:16px;">
+        <li><strong>Source에 예시 문서를 최대한 많이 추가</strong> — 많을수록 교과 특성을 더 잘 반영</li>
+        <li><strong>문장 다양화</strong> — 같은 표현이 반복되지 않도록 제한 조건 추가</li>
+        <li><strong>❌ 복붙 금지 &nbsp; ✅ 최종 검토 필수</strong></li>
+      </ul>
+      <div class="drive-box">
+        <div class="drive-icon-row">
+          <div class="drive-icon">📁</div>
+          <div>
+            <div style="font-family:'DM Sans',sans-serif; font-size:clamp(18px, 1.1vw, 18px); color:var(--ink-mid); margin-bottom:4px; font-weight:600;">실습 자료</div>
+            <div class="drive-link-text">drive.google.com/drive/folders/1sxdBof20-m3MLaeid-yW36c38rG-4YNE</div>
+          </div>
+        </div>
+        <div class="live-demo-badge"><span class="live-dot"></span>강사 직접 시연</div>
+      </div>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">17</span></div>
+    </div>
+  </div>
+
+  <!-- 18 SECTION: 4부 -->
+  <div class="slide section-slide" id="s18">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Part 4</div>
+      <div class="divider"></div>
+      <h1 class="ko">주의사항</h1>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">18</span></div>
+    </div>
+  </div>
+
+  <!-- 19 주의사항 통합 -->
+  <div class="slide" id="s19">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Part 4 · 주의사항</div>
+      <h2 class="ko">꼭 알아야 할 주의사항</h2>
+      <div class="accent-divider"></div>
+      <div class="ethics-list">
+        <div class="ethics-item">
+          <div class="ethics-icon">🚫</div>
+          <div class="ethics-text">
+            <strong>학생 실명 입력 금지</strong>
+            ChatGPT에 학생의 실명을 절대 입력하지 말 것. 이니셜 또는 가명을 사용할 것.
+          </div>
+        </div>
+        <div class="ethics-item">
+          <div class="ethics-icon">🔒</div>
+          <div class="ethics-text">
+            <strong>민감 정보 주의</strong>
+            성적, 가정환경, 건강 정보 등 민감한 내용은 AI에 입력하지 않는다.
+          </div>
+        </div>
+        <div class="ethics-item">
+          <div class="ethics-icon">⚠️</div>
+          <div class="ethics-text">
+            <strong>Hallucination (환각) 주의</strong>
+            GPT는 사실이 아닌 내용을 그럴듯하게 생성할 수 있다. 생성된 모든 내용은 반드시 교사가 직접 검토해야 한다.
+          </div>
+        </div>
+        <div class="ethics-item">
+          <div class="ethics-icon">📏</div>
+          <div class="ethics-text">
+            <strong>텍스트 길이 제한</strong>
+            한 번에 처리할 수 있는 텍스트 길이에 한계가 있다. 긴 작업은 나눠서 요청할 것. (예: 단어 100개 → 50개씩 2번)
+          </div>
+        </div>
+      </div>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">19</span></div>
+    </div>
+  </div>
+
+  <!-- 20 SECTION: AI 생태계 -->
+  <div class="slide section-slide" id="s20">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Bonus</div>
+      <div class="divider"></div>
+      <h1 class="ko">AI 생태계 이해</h1>
+      <p class="body-en" style="color:rgba(255,255,255,0.4); margin-top:14px;">GPT만이 전부가 아니다</p>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">20</span></div>
+    </div>
+  </div>
+
+  <!-- 21 AI 3사 비교 -->
+  <div class="slide" id="s21">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">AI 생태계 · 비교</div>
+      <h2 class="ko">GPT · Gemini · Claude 비교</h2>
+      <div class="accent-divider"></div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:3%; margin-top:4px;">
+
+        <div class="compare-card" style="border-top:3px solid #10a37f;">
+          <div class="compare-card-title">🤖 GPT</div>
+          <ul>
+            <li><strong>✅ 장점</strong></li>
+            <li>빠르고 저렴하다</li>
+            <li>문맥 이해 우수</li>
+            <li>대화에 가장 최적화</li>
+            <li>많은 사람에게 충분한 성능</li>
+            <li style="margin-top:8px;"><strong>⚠️ 단점</strong></li>
+            <li>B급 퀄리티, 빈틈 있음</li>
+          </ul>
+        </div>
+
+        <div class="compare-card" style="border-top:3px solid #4285f4;">
+          <div class="compare-card-title">💎 Gemini</div>
+          <ul>
+            <li><strong>✅ 장점</strong></li>
+            <li>검색·정보 수집 탁월</li>
+            <li>Google 서비스 연동</li>
+            <li>NotebookLM, Sheets, Docs 활용 가능</li>
+            <li style="margin-top:8px;"><strong>⚠️ 단점</strong></li>
+            <li>문맥 이해는 GPT보다 다소 아쉬움</li>
+          </ul>
+        </div>
+
+        <div class="compare-card" style="border-top:3px solid var(--accent);">
+          <div class="compare-card-title">🏆 Claude</div>
+          <ul>
+            <li><strong>✅ 장점</strong></li>
+            <li>전반적으로 가장 높은 성능</li>
+            <li>코드·검색·아이디어 최강</li>
+            <li>결과물 완성도 최고</li>
+            <li style="margin-top:8px;"><strong>⚠️ 단점</strong></li>
+            <li>크레딧 소모가 빠름</li>
+            <li>세 가지 중 가장 비쌈</li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">21</span></div>
+    </div>
+  </div>
+
+  <!-- 22 AI 활용법 -->
+  <div class="slide" id="s22">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">AI 생태계 · 스마트 활용</div>
+      <h2 class="ko">AI별 역할 분담 전략</h2>
+      <div class="accent-divider"></div>
+      <div class="ethics-list">
+        <div class="ethics-item">
+          <div class="ethics-icon" style="background:#e8f5f0;">🤖</div>
+          <div class="ethics-text">
+            <strong>GPT — 대화 &amp; 아이디어</strong>
+            Voice로 상담·아이디어 정리·냉장고 재료 메뉴 추천 등 말로 하는 스마트 비서. 빠르고 저렴해서 아이디어 초안 생성에 최적.
+          </div>
+        </div>
+        <div class="ethics-item">
+          <div class="ethics-icon" style="background:#e8eeff;">💎</div>
+          <div class="ethics-text">
+            <strong>Gemini — 검색 &amp; 자료 수집</strong>
+            자료 검색 후 NotebookLM으로 나만의 스마트 비서 구축. Sheets·Docs 연동으로 작업 흐름을 자동화하고 영상 생성까지 가능.
+          </div>
+        </div>
+        <div class="ethics-item">
+          <div class="ethics-icon" style="background:#faf3e8;">🏆</div>
+          <div class="ethics-text">
+            <strong>Claude — 최종 다듬기 &amp; 완성</strong>
+            GPT·Gemini로 만든 초안과 아이디어를 Claude에 넘겨 최종 완성. 완성도가 가장 높기 때문에 마지막 단계에 투입.
+          </div>
+        </div>
+      </div>
+      <div class="highlight">💡 AI 하나만 쓰지 마세요 — 각각의 강점을 조합하면 훨씬 강력한 결과물이 나옵니다.</div>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">22</span></div>
+    </div>
+  </div>
+
+  <!-- 23 핵심 요약 -->
+  <div class="slide" id="s23">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Closing · Summary</div>
+      <div class="summary-index-title">Part Index</div>
+      <div class="summary-index">
+        <div class="summary-index-item"><span>Part 1</span>AI &amp; LLM 이해</div>
+        <div class="summary-index-item"><span>Part 2</span>프롬프트 작성법</div>
+        <div class="summary-index-item"><span>Part 3</span>GPT 실전 활용</div>
+        <div class="summary-index-item"><span>Part 4</span>주의사항</div>
+        <div class="summary-index-item"><span>Bonus</span>AI 생태계</div>
+      </div>
+      <h2 class="ko" style="margin-bottom:6px;">핵심 요약</h2>
+      <div class="accent-divider"></div>
+      <div class="summary-grid">
+        <div>
+          <div class="summary-label">1부 · AI &amp; LLM 이해</div>
+          <div class="summary-text">LLM은 사람처럼 생각하는 기계가 아니라, 문맥을 바탕으로 다음 단어를 예측하는 확률 기반 모델이다.</div>
+        </div>
+        <div>
+          <div class="summary-label">2부 · 프롬프트 작성법</div>
+          <div class="summary-text">좋은 결과는 Role, Task, Format, Constraints처럼 역할·목표·형식·제약을 구체적으로 줄 때 나온다.</div>
+        </div>
+        <div>
+          <div class="summary-label">3부 · GPT 실전 활용</div>
+          <div class="summary-text">Projects는 자료와 대화를 묶어 장기 문맥을 만들고, GPTs는 반복되는 교사 업무를 역할별 비서로 만든다.</div>
+        </div>
+        <div>
+          <div class="summary-label">4부 · 주의사항</div>
+          <div class="summary-text">학생 실명과 민감 정보는 입력하지 않고, 환각 가능성이 있으므로 모든 결과는 교사가 최종 검토해야 한다.</div>
+        </div>
+        <div class="summary-note">
+          <div class="summary-label">Bonus · AI 생태계</div>
+          <div class="summary-text">GPT는 대화와 초안, Gemini는 검색과 자료 수집, Claude는 최종 다듬기에 강하다. 하나만 쓰기보다 역할을 나누어 조합한다.</div>
+        </div>
+      </div>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">23</span></div>
+    </div>
+  </div>
+
+  <!-- 24 감사합니다 -->
+  <div class="slide section-slide" id="s24">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="eyebrow">Thank You</div>
+      <div class="divider"></div>
+      <h1 class="ko">감사합니다</h1>
+      <div class="bottom-row"><span class="presenter">ChatGPT for Teachers · EJ</span><span class="slide-num">24</span></div>
+      <div class="deco-circle"></div>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- NAV -->
+<div class="nav">
+  <button id="prevBtn" onclick="changeSlide(-1)" disabled>←</button>
+  <div class="progress"><div class="progress-fill" id="pf" style="width:5%;"></div></div>
+  <span class="counter" id="counter">1 / 24</span>
+  <button id="nextBtn" onclick="changeSlide(1)">→</button>
+</div>
+
+<script>
+const TOTAL = 24;
+let cur = 1;
+
+function changeSlide(d) {
+  document.getElementById('s' + cur).classList.remove('active');
+  cur = Math.max(1, Math.min(TOTAL, cur + d));
+  document.getElementById('s' + cur).classList.add('active');
+  updateControls();
+}
+
+function goToSlide(n) {
+  document.getElementById('s' + cur).classList.remove('active');
+  cur = Math.max(1, Math.min(TOTAL, n));
+  document.getElementById('s' + cur).classList.add('active');
+  updateControls();
+}
+
+function updateControls() {
+  const activeSlide = document.getElementById('s' + cur);
+  const deck = document.querySelector('.deck');
+  const pct = (cur / TOTAL * 100) + '%';
+  document.getElementById('counter').textContent = cur + ' / ' + TOTAL;
+  document.getElementById('pf').style.width = pct;
+  document.getElementById('prevBtn').disabled = cur === 1;
+  document.getElementById('nextBtn').disabled = cur === TOTAL;
+  deck.classList.toggle('no-part-nav', cur < 3 || cur === TOTAL);
+  deck.classList.toggle('dark-part-nav', activeSlide.classList.contains('section-slide'));
+  document.querySelectorAll('.part-nav button').forEach(btn => {
+    const start = Number(btn.dataset.target);
+    const next = btn.nextElementSibling ? Number(btn.nextElementSibling.dataset.target) : TOTAL + 1;
+    btn.classList.toggle('active', cur >= start && cur < next);
+  });
+}
+
+document.querySelectorAll('.part-nav button').forEach(btn => {
+  btn.addEventListener('click', () => goToSlide(Number(btn.dataset.target)));
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   changeSlide(-1);
+});
+
+updateControls();
+</script>
+</body>
+</html>
